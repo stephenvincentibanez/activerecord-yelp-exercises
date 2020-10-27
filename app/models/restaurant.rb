@@ -38,20 +38,26 @@ class Restaurant < ActiveRecord::Base
         end
     end
 
+    def self.vegetarian 
+        arr = []
+        Restaurant.all.each do |r|
+            veg_dishes = Dish.joins(:tags).where(dishes: {:restaurant_id => r.id})
+            .where(tags: {:name => "Vegetarian"})
+            if veg_dishes.length == r.dishes.length
+                arr << r
+            end
+        end
+        arr
+    end
+
     # def self.vegetarian
     #     Restaurant.all.select do |r|
-    #         r.all_dishtags.each do |d|
-    #             d.each do |t|
-    #                 t.name = "Vegetarian"
-    #             end
-    #         end
+    #         r.all_dishtags
     #     end
     # end
 
-    def self.vegetarian
-        Restaurant.all.select do |r|
-            r.all_dishtags
-        end
+    def self.name_like(name)
+        Restaurant.where("name LIKE #{name}")
     end
 
 end
